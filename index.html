@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tus semanas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#0b141a;--surf:#121f27;--line:#22343d;--ink:#e8f0f3;--mute:#8aa0a9;--lived:#2e434c;--left:#5fd0d8;--now:#ffb938;--onnow:#1a1200;color-scheme:dark;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f3f6f7;--surf:#fff;--line:#d5e0e4;--ink:#10212a;--mute:#5a6e77;--lived:#b9c9d0;--left:#0b7a85;--now:#e59a0c;--onnow:#1a1200;color-scheme:light}}
+:root[data-theme="light"]{--bg:#f3f6f7;--surf:#fff;--line:#d5e0e4;--ink:#10212a;--mute:#5a6e77;--lived:#b9c9d0;--left:#0b7a85;--now:#e59a0c;--onnow:#1a1200;color-scheme:light}
+:root[data-theme="dark"]{--bg:#0b141a;--surf:#121f27;--line:#22343d;--ink:#e8f0f3;--mute:#8aa0a9;--lived:#2e434c;--left:#5fd0d8;--now:#ffb938;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 Manrope,system-ui,sans-serif}
+[hidden]{display:none!important}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--bg);border-bottom:1px solid var(--line)}
+.brand{font:400 24px/1 "Instrument Serif",Georgia,serif}
+.bar div{display:flex;gap:8px}
+main{max-width:920px;margin:0 auto;padding:28px 20px 72px}
+h1{font:400 clamp(40px,8vw,76px)/1.02 "Instrument Serif",Georgia,serif;margin:0 0 14px;letter-spacing:-.01em;max-width:14ch}
+h2{font:400 28px/1.15 "Instrument Serif",Georgia,serif;margin:0 0 6px}
+.lead{color:var(--mute);max-width:52ch;margin:0 0 24px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
+form{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--mute);flex:1 1 170px}
+input[type=date],input[type=text],select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-height:46px;width:100%}
+button{font:inherit;font-weight:600;border-radius:10px;min-height:44px;padding:0 16px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}
+button.pri{background:var(--now);border-color:var(--now);color:var(--onnow)}
+button:hover{border-color:var(--mute)}
+input[type=range]{width:100%;accent-color:var(--left);height:32px}
+:focus-visible{outline:3px solid var(--now);outline-offset:2px}
+.hero{display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline;margin-bottom:10px}
+.big{font:400 clamp(64px,16vw,132px)/.95 "Instrument Serif",Georgia,serif;color:var(--left);font-variant-numeric:tabular-nums}
+.hero p{margin:0;color:var(--mute);max-width:32ch}
+.prog{height:6px;background:var(--lived);border-radius:6px;overflow:hidden;margin:10px 0 8px}
+.prog i{display:block;height:100%;background:var(--now);width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+#clock{font-variant-numeric:tabular-nums;font-weight:600;color:var(--mute);margin:0 0 20px;font-size:15px}
+.gw{position:relative}
+canvas{display:block;width:100%;cursor:crosshair}
+#tip{position:absolute;pointer-events:none;transform:translate(-50%,-125%);background:var(--ink);color:var(--bg);padding:8px 11px;border-radius:10px;font-size:13px;line-height:1.35;white-space:nowrap;z-index:3}
+#tip b{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mute);margin:12px 0 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.scen{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+.scen p{margin:0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px;color:var(--mute)}
+.scen strong{color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stats .card{margin:0;padding:16px}
+.stats b{display:block;font:400 34px/1.1 "Instrument Serif",Georgia,serif}
+.stats span{font-size:13px;color:var(--mute)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.chips button[aria-pressed=true]{background:var(--left);border-color:var(--left);color:var(--bg)}
+.res{font:400 clamp(30px,6vw,44px)/1.1 "Instrument Serif",Georgia,serif;margin:6px 0 0}
+.res small{font:400 14px Manrope,system-ui,sans-serif;color:var(--mute);display:block;margin-top:4px}
+.now{border-left:4px solid var(--now);padding-left:16px;font:400 clamp(24px,4.5vw,32px)/1.25 "Instrument Serif",Georgia,serif;margin:0 0 12px}
+.fine{font-size:13px;color:var(--mute);max-width:66ch;margin-top:20px}
+.addrow{display:flex;gap:8px;margin:0 0 16px}
+.addrow input{flex:1;min-width:0}
+.sc{cursor:default;height:auto;max-width:340px;margin:0 auto 16px;border:1px solid var(--line);border-radius:12px}
+</style>
+</head>
+<body>
+<header class="bar">
+<span class="brand">Tus semanas</span>
+<div><button id="edit" hidden>Cambiar datos</button><button id="theme" aria-label="Cambiar tema">Tema</button></div>
+</header>
+<main>
+<section id="setup">
+<h1>¿Cuántas semanas te quedan?</h1>
+<p class="lead">Cada punto es una semana de tu vida. Mira cuántas has vivido y cuántas quedan en promedio donde vives, y decide qué hacer con la de hoy.</p>
+<form id="f" class="card">
+<label>Fecha de nacimiento<input type="date" id="dob" required></label>
+<label>País<select id="country"></select></label>
+<label>Sexo<select id="sex"><option value="0">Promedio general</option><option value="-2.5">Hombre</option><option value="2.5">Mujer</option></select></label>
+<button class="pri" type="submit">Ver mis semanas</button>
+</form>
+</section>
+
+<section id="out" hidden>
+<div class="hero"><div class="big" id="yrs">0</div><p id="sub"></p></div>
+<div class="prog" aria-hidden="true"><i id="pb"></i></div>
+<p id="clock"></p>
+
+<div class="card">
+<div class="gw"><canvas id="cv" role="img" aria-label="Cuadrícula de semanas: vividas, la actual y las restantes"></canvas><div id="tip" hidden></div></div>
+<div class="legend">
+<span><i style="background:var(--lived)"></i>Vividas</span>
+<span><i style="background:var(--now)"></i>Esta semana</span>
+<span><i style="border:1.5px solid var(--left)"></i>Por vivir</span>
+<span>Cada fila es un año. Toca o pasa el cursor sobre una semana.</span>
+</div>
+<div class="scen">
+<p><span>Si vivo hasta los <strong id="sv"></strong> años</span><button id="rs">Volver al promedio</button></p>
+<input type="range" id="sl" aria-label="Edad hasta la que vivirás">
+</div>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="card">
+<h2>Lo que de verdad queda</h2>
+<p class="lead" style="margin:0">Elige algo que te importa y cuántas veces al año lo haces.</p>
+<div class="chips" id="chips"></div>
+<div class="addrow"><input type="text" id="an" maxlength="40" placeholder="Agrega algo propio, ej. Llamar a mi abuela" aria-label="Nueva actividad"><button type="button" id="aa">Agregar</button></div>
+<label>Veces al año: <strong id="fv"></strong><input type="range" id="fs" min="1" max="52" aria-label="Veces al año"></label>
+<p class="res" id="res"></p>
+<button type="button" id="ad" hidden style="margin-top:12px">Quitar esta actividad</button>
+</div>
+
+<div class="card">
+<p class="now" id="now"></p>
+<label>Mi intención para esta semana<input type="text" id="intent" maxlength="90" placeholder="Esta semana quiero…"></label>
+</div>
+
+<div class="card">
+<h2>Comparte tu cuadrícula</h2>
+<p class="lead" style="margin:0 0 14px">Una imagen para recordar que hoy cuenta. No incluye tu fecha de nacimiento ni tu país.</p>
+<canvas id="sc" class="sc" role="img" aria-label="Vista previa de la tarjeta para compartir" width="1080" height="1920"></canvas>
+<label style="margin-bottom:14px">Mensaje de la tarjeta<input type="text" id="sm" maxlength="100"></label>
+<div class="chips" style="margin:0"><button type="button" id="sh" class="pri" hidden>Compartir</button><button type="button" id="dl" class="pri" hidden>Guardar imagen</button></div>
+<p class="fine" id="shn" hidden style="margin:0">Mantén presionada o haz clic derecho sobre la imagen para guardarla.</p>
+</div>
+
+<p class="fine">Estimación basada en la esperanza de vida al nacer aproximada por país (referencias ONU y Banco Mundial, redondeadas). Cada vida es distinta, y quien ya superó el promedio suele vivir más años de los que aquí se cuentan. Úsala como espejo, no como pronóstico.</p>
+</section>
+</main>
+
+<script>
+const C={"México":75,"Estados Unidos":79,"Canadá":82,"España":83,"Argentina":76,"Chile":81,"Colombia":77,"Perú":77,"Brasil":76,"Venezuela":73,"Ecuador":77,"Uruguay":78,"Paraguay":70,"Bolivia":69,"Guatemala":71,"Costa Rica":81,"Panamá":78,"Cuba":74,"República Dominicana":73,"Francia":83,"Alemania":81,"Italia":83,"Reino Unido":81,"Portugal":82,"Países Bajos":82,"Suecia":83,"Rusia":73,"Turquía":78,"Japón":85,"Corea del Sur":84,"China":78,"India":70,"Indonesia":71,"Australia":83,"Egipto":71,"Sudáfrica":66,"Nigeria":54};
+let ACT=[["Ver a mi familia",6],["Cenar con amigos",12],["Viajar",2],["Leer un libro",8],["Ver un atardecer sin prisa",24]];
+try{const a=JSON.parse(localStorage.getItem("tv-a")||"null");if(Array.isArray(a)&&a.every(x=>Array.isArray(x)&&typeof x[0]==="string"))ACT=a.slice(0,12).map(x=>[String(x[0]).slice(0,40),Math.min(52,Math.max(1,+x[1]||1))])}catch(e){}
+const $=id=>document.getElementById(id),YR=365.2425*864e5,fmt=n=>Math.round(n).toLocaleString("es-MX"),dec=n=>n.toFixed(1).replace(".",",");
+const root=document.documentElement,cv=$("cv"),tip=$("tip"),sel=$("country");
+let S=null,hov=-1,pin=-1,prog=1,raf=0,timer=0,act=0,freq=ACT.map(a=>a[1]);
+const store=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},load=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+
+Object.keys(C).sort((a,b)=>a.localeCompare(b,"es")).forEach(k=>sel.add(new Option(k,k)));
+sel.value="México";$("dob").max=new Date().toISOString().slice(0,10);
+const th=load("tv-t");if(th)root.dataset.theme=th;
+try{const s=JSON.parse(load("tv")||"null");if(s){$("dob").value=s.d;sel.value=s.c;$("sex").value=s.s}}catch(e){}
+$("intent").value=load("tv-i")||"";
+
+function calc(){
+  const birth=new Date($("dob").value+"T00:00:00"),age=(Date.now()-birth)/YR;
+  if(!(age>=0)||age>120)return null;
+  const exp=C[sel.value]+parseFloat($("sex").value),base=Math.max(exp,age+4);
+  return{birth,age,base,total:base,rem:base-age};
+}
+const lw=()=>Math.floor(S.age*52);
+function geo(W){const L=W<500?24:34,cell=(W-L)/52;return{L,cell}}
+
+function draw(){
+  if(!S)return;
+  const dpr=devicePixelRatio||1,W=cv.parentElement.clientWidth,{L,cell}=geo(W),rows=Math.ceil(S.total),H=Math.ceil(rows*cell)+2;
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.height=H+"px";
+  const x=cv.getContext("2d");x.setTransform(dpr,0,0,dpr,0,0);
+  const g=n=>getComputedStyle(root).getPropertyValue(n).trim(),cl=g("--lived"),cr=g("--left"),cn=g("--now"),cm=g("--mute");
+  const lived=lw(),cells=Math.round(S.total*52),show=Math.ceil(cells*prog),r=Math.max(1.2,cell*.36);
+  x.lineWidth=Math.max(.8,cell*.09);x.font="11px Manrope,system-ui,sans-serif";x.textBaseline="middle";
+  if(hov>=0){x.globalAlpha=.12;x.fillStyle=cm;x.fillRect(L-2,Math.floor(hov/52)*cell,W-L+2,cell);x.globalAlpha=1}
+  x.fillStyle=cm;for(let y=0;y<rows;y+=10)x.fillText(String(y),0,(y+.5)*cell);
+  for(let i=0;i<show;i++){
+    const cx=L+(i%52+.5)*cell,cy=(Math.floor(i/52)+.5)*cell,h=i===hov||i===pin;
+    x.beginPath();
+    if(i===lived){x.fillStyle=cn;x.arc(cx,cy,r*1.7,0,7);x.fill();continue}
+    x.arc(cx,cy,h?r*1.7:r,0,7);
+    if(i<lived){x.fillStyle=h?cn:cl;x.fill()}else{x.strokeStyle=h?cn:cr;x.stroke()}
+  }
+}
+
+function idx(e){
+  const b=cv.getBoundingClientRect(),{L,cell}=geo(b.width),c=Math.floor((e.clientX-b.left-L)/cell),r=Math.floor((e.clientY-b.top)/cell);
+  if(c<0||c>51||r<0)return -1;
+  const i=r*52+c;return i<Math.round(S.total*52)?i:-1;
+}
+function showTip(i,e){
+  if(i<0){tip.hidden=true;return}
+  const b=cv.getBoundingClientRect(),d=new Date(S.birth.getTime()+i*7*864e5),y=Math.floor(i/52),l=lw();
+  const st=i<l?"Ya la viviste":i===l?"Es esta. Está pasando ahora":"Aún por vivir";
+  tip.innerHTML=`<b>Semana ${i%52+1} · ${y} años</b>${d.toLocaleDateString("es-MX",{day:"numeric",month:"short",year:"numeric"})} · ${st}`;
+  tip.hidden=false;
+  const w=tip.offsetWidth/2+6;
+  tip.style.left=Math.min(b.width-w,Math.max(w,e.clientX-b.left))+"px";
+  tip.style.top=(e.clientY-b.top)+"px";
+}
+cv.addEventListener("pointermove",e=>{if(!S)return;hov=idx(e);showTip(hov,e);draw()});
+cv.addEventListener("pointerleave",()=>{hov=-1;if(pin<0)tip.hidden=true;draw()});
+cv.addEventListener("click",e=>{const i=idx(e);pin=i===pin?-1:i;hov=i;showTip(i,e);draw()});
+
+function setHero(k){$("yrs").textContent=dec(S.rem*k)}
+function play(){
+  cancelAnimationFrame(raf);
+  $("pb").style.width=Math.min(100,S.age/S.total*100)+"%";
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches){prog=1;draw();setHero(1);return}
+  const t0=performance.now();
+  (function f(t){const p=Math.min(1,(t-t0)/1600);prog=1-Math.pow(1-p,3);draw();setHero(prog);if(p<1)raf=requestAnimationFrame(f)})(t0);
+}
+
+function tick(){
+  if(!S)return;
+  let ms=Math.max(0,S.total*YR-(Date.now()-S.birth));
+  const p=n=>String(n).padStart(2,"0");
+  $("clock").textContent=`${fmt(Math.floor(ms/864e5))} días ${p(Math.floor(ms%864e5/36e5))}:${p(Math.floor(ms%36e5/6e4))}:${p(Math.floor(ms%6e4/1e3))} y contando`;
+}
+
+function info(){
+  const days=S.rem*365.2425,weeks=S.rem*52.1775;
+  $("sub").textContent=`años por vivir en promedio si naciste en ${sel.value}. Llevas ${dec(S.age)}.`;
+  $("sv").textContent=Math.round(S.total);
+  $("sl").value=Math.round(S.total);
+  $("pb").style.width=Math.min(100,S.age/S.total*100)+"%";
+  $("stats").innerHTML=[[weeks,"semanas por vivir"],[Math.floor(S.rem),"veranos"],[Math.floor(S.rem),"cumpleaños"],[days,"amaneceres"]]
+    .map(i=>`<div class="card"><b>${fmt(i[0])}</b><span>${i[1]}</span></div>`).join("");
+  const R=$("res");R.textContent="";
+  if(ACT.length){R.append(`Te quedan ${fmt(Math.floor(S.rem*freq[act]))} veces`);const s=document.createElement("small");s.textContent=`${ACT[act][0]}, a ${freq[act]} por año`;R.appendChild(s)}else R.textContent="Agrega algo que te importe.";
+  $("now").textContent=`Esta es la semana ${fmt(S.age*52+1)} de tu vida. Está pasando ahora.`;
+  shDraw();
+}
+
+function chips(){
+  const c=$("chips");c.textContent="";
+  ACT.forEach((a,i)=>{const b=document.createElement("button");b.type="button";b.dataset.i=i;b.setAttribute("aria-pressed",i===act);b.textContent=a[0];c.appendChild(b)});
+  const has=ACT.length>0;$("fs").disabled=!has;$("ad").hidden=!has;
+  $("fs").value=has?freq[act]:1;$("fv").textContent=has?freq[act]:"–";
+}
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;act=+b.dataset.i;chips();info()});
+$("fs").addEventListener("input",e=>{if(!ACT.length)return;freq[act]=+e.target.value;$("fv").textContent=freq[act];saveA();info()});
+$("sl").addEventListener("input",e=>{S.total=Math.max(+e.target.value,S.age+1);S.rem=S.total-S.age;pin=-1;tip.hidden=true;prog=1;cancelAnimationFrame(raf);info();draw();setHero(1);tick()});
+$("rs").addEventListener("click",()=>{S.total=S.base;S.rem=S.total-S.age;prog=1;info();draw();setHero(1);tick()});
+function saveA(){store("tv-a",JSON.stringify(ACT.map((a,i)=>[a[0],freq[i]])))}
+function addAct(){
+  const n=$("an").value.trim().slice(0,40);if(!n||ACT.length>=12)return;
+  ACT.push([n,12]);freq.push(12);act=ACT.length-1;$("an").value="";saveA();chips();if(S)info();
+}
+$("aa").addEventListener("click",addAct);
+$("an").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addAct()}});
+$("ad").addEventListener("click",()=>{ACT.splice(act,1);freq.splice(act,1);act=Math.max(0,Math.min(act,ACT.length-1));saveA();chips();info()});
+
+let shq=0;
+const shDraw=()=>{cancelAnimationFrame(shq);shq=requestAnimationFrame(drawShare)};
+function drawShare(){
+  if(!S)return;
+  const c=$("sc"),x=c.getContext("2d"),W=1080,H=1920;c.width=W;c.height=H;
+  const g=n=>getComputedStyle(root).getPropertyValue(n).trim(),cl=g("--lived"),cr=g("--left"),cn=g("--now");
+  const serif='"Instrument Serif",Georgia,serif';
+  x.fillStyle=g("--bg");x.fillRect(0,0,W,H);x.textAlign="center";x.textBaseline="alphabetic";
+  x.fillStyle=cr;x.font=`400 150px ${serif}`;x.fillText(fmt(Math.round(S.rem*52.1775)),W/2,190);
+  x.fillStyle=g("--ink");x.font=`400 52px ${serif}`;x.fillText("semanas por vivir, en promedio",W/2,262);
+  const rows=Math.ceil(S.total),cell=Math.min(900/52,1280/rows),ox=(W-cell*52)/2,oy=340,lived=lw(),cells=Math.round(S.total*52),r=Math.max(1.5,cell*.36);
+  x.lineWidth=Math.max(1,cell*.1);
+  for(let i=0;i<cells;i++){
+    const cx=ox+(i%52+.5)*cell,cy=oy+(Math.floor(i/52)+.5)*cell;
+    x.beginPath();
+    if(i===lived){x.fillStyle=cn;x.arc(cx,cy,r*1.7,0,7);x.fill();continue}
+    x.arc(cx,cy,r,0,7);
+    if(i<lived){x.fillStyle=cl;x.fill()}else{x.strokeStyle=cr;x.stroke()}
+  }
+  x.fillStyle=g("--ink");x.font=`400 54px ${serif}`;
+  const lines=[];let l="";
+  for(const w of ($("sm").value.trim()||"Hoy es la semana que importa.").split(/\s+/)){const t=l?l+" "+w:w;if(x.measureText(t).width>860&&l){lines.push(l);l=w}else l=t}
+  lines.push(l);
+  const my=oy+rows*cell+90;
+  lines.slice(0,3).forEach((t,i)=>x.fillText(t,W/2,my+i*62));
+  x.fillStyle=g("--mute");x.font="600 26px Manrope,system-ui,sans-serif";x.fillText("Tus semanas",W/2,H-34);
+}
+const blobPng=()=>new Promise(r=>$("sc").toBlob(r,"image/png"));
+$("sm").value=load("tv-m")||"Hoy es la semana que importa.";
+$("sm").addEventListener("input",e=>{store("tv-m",e.target.value);shDraw()});
+$("dl").addEventListener("click",async()=>{try{const d=await claude.use("downloads");if(d)await d.save({filename:"mis-semanas.png",data:await blobPng()})}catch(e){}});
+$("sh").addEventListener("click",async()=>{try{const f=new File([await blobPng()],"mis-semanas.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:"Mis semanas",text:$("sm").value})}catch(e){}});
+(async()=>{let ok=false;
+  try{const d=await claude.use("downloads");if(d){$("dl").hidden=false;ok=true}}catch(e){}
+  try{if(navigator.canShare&&navigator.share){$("sh").hidden=false;ok=true}}catch(e){}
+  $("shn").hidden=ok})();
+try{document.fonts.load('150px "Instrument Serif"').then(shDraw)}catch(e){}
+
+$("intent").addEventListener("input",e=>store("tv-i",e.target.value));
+$("theme").addEventListener("click",()=>{const d=(root.dataset.theme||(matchMedia("(prefers-color-scheme:light)").matches?"light":"dark"))==="dark";root.dataset.theme=d?"light":"dark";store("tv-t",root.dataset.theme);draw();shDraw()});
+$("edit").addEventListener("click",()=>{$("setup").hidden=false;$("out").hidden=true;$("edit").hidden=true;scrollTo(0,0)});
+
+function go(){
+  S=calc();if(!S)return;
+  store("tv",JSON.stringify({d:$("dob").value,c:sel.value,s:$("sex").value}));
+  $("setup").hidden=true;$("out").hidden=false;$("edit").hidden=false;
+  $("sl").min=Math.ceil(S.age)+1;$("sl").max=Math.max(105,Math.ceil(S.base)+10);
+  hov=pin=-1;tip.hidden=true;chips();info();tick();clearInterval(timer);timer=setInterval(tick,1000);
+  scrollTo(0,0);play();
+}
+$("f").addEventListener("submit",e=>{e.preventDefault();go()});
+addEventListener("resize",draw);
+matchMedia("(prefers-color-scheme:light)").addEventListener("change",draw);
+if($("dob").value)go();
+</script>
+</body>
+</html>
